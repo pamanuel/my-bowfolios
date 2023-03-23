@@ -21,11 +21,8 @@ function getProfileData(email) {
   // console.log(_.extend({ }, data, { interests, projects: projectPictures }));
   return _.extend({}, data, { interests, projects: projectPictures });
 }
+const LuckyPage = () => {
 
-/* Component for layout out a Profile Card. */
-
-/* Renders the Profile Collection as a set of Cards. */
-const ProfilesPage = () => {
   const { ready } = useTracker(() => {
     // Ensure that minimongo is populated with all collections prior to running render().
     const sub1 = Meteor.subscribe(Profiles.userPublicationName);
@@ -40,13 +37,14 @@ const ProfilesPage = () => {
   // There is a potential race condition. We might not be ready at this point.
   // Need to ensure that getProfileData doesn't throw an error on line 18.
   const profileData = emails.map(email => getProfileData(email));
+  const profile = _.sample(profileData);
   return ready ? (
     <Container id={PageIDs.profilesPage} style={pageStyle}>
       <Row xs={1} md={2} lg={4} className="g-2">
-        {profileData.map((profile, index) => <ProfileCard key={index} profile={profile} />)}
+        <ProfileCard profile={profile} />
       </Row>
     </Container>
   ) : <LoadingSpinner />;
 };
 
-export default ProfilesPage;
+export default LuckyPage;
